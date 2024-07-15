@@ -14,9 +14,12 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
+
+  const corsDomain = process.env.CORS_DOMAINS || 'http://localhost';
+  const corsRegex = new RegExp(`^${corsDomain.replace('.', '\\.')}(:\\d+)?$`);
   app.use(
     cors({
-      origin: ['http://localhost:3000', 'http://localhost:3001'],
+      origin: corsRegex,
       credentials: true,
     }),
   );
