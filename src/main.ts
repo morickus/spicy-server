@@ -15,11 +15,10 @@ async function bootstrap() {
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
 
-  const corsDomain = process.env.CORS_DOMAINS || 'http://localhost';
-  const corsRegex = new RegExp(`^${corsDomain.replace('.', '\\.')}(:\\d+)?$`);
+  const corsDomain = process.env.CORS_DOMAINS || 'http://localhost:3000';
   app.use(
     cors({
-      origin: corsRegex,
+      origin: corsDomain.split(','),
       credentials: true,
     }),
   );
