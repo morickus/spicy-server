@@ -54,9 +54,6 @@ export class CategoriesService {
 
   async getAllCategories() {
     const categories = await this.prisma.category.findMany({
-      orderBy: {
-        id: 'desc',
-      },
       select: {
         id: true,
         slug: true,

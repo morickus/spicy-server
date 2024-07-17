@@ -10,7 +10,7 @@ export class SlugService {
     const slug = slugify(name, { lower: true, strict: true });
     let uniqueSlug = slug;
     let count = 1;
-    console.log('name ', name);
+
     try {
       while (await this.isSlugExist(uniqueSlug, tableName)) {
         uniqueSlug = `${slug}-${count}`;
