@@ -239,6 +239,7 @@ export class ArticlesService {
     return {
       data,
       totalPages,
+      limitPage: limit,
       currentPage: page,
       hasPrev: page > 1,
       hasNext: page < totalPages,
