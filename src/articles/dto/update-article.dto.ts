@@ -28,6 +28,11 @@ export class UpdateArticleDto {
   @Type(() => JsonContentDto)
   content?: JsonContentDto[];
 
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  metaDescription?: string;
+
   @ApiProperty({ example: ['category1', 'category2'], required: false })
   @IsArray()
   @IsOptional()

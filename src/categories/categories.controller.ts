@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -28,10 +28,10 @@ export class CategoriesController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin)
   create(@Body() body: CreateCategoryDto) {
-    return this.categoriesService.createCategory(body.name);
+    return this.categoriesService.createCategory(body);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOkResponse({ type: CategoryResponseDto })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin)
@@ -51,5 +51,11 @@ export class CategoriesController {
   @ApiOkResponse({ type: [CategoryResponseDto] })
   findAll() {
     return this.categoriesService.getAllCategories();
+  }
+
+  @Get(':slug')
+  @ApiOkResponse({ type: CategoryResponseDto })
+  findOne(@Param('slug') slug: string) {
+    return this.categoriesService.getCategoryBySlug(slug);
   }
 }

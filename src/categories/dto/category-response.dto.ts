@@ -10,6 +10,9 @@ export class CategoryResponseDto {
   @ApiProperty()
   name: string;
 
+  @ApiProperty({ required: false })
+  metaDescription?: string;
+
   @ApiProperty()
   countArticles: number;
 }

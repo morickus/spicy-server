@@ -4,6 +4,7 @@ import {
   ArrayMinSize,
   IsArray,
   IsNotEmpty,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -23,6 +24,11 @@ export class CreateArticleDto {
   @ValidateNested({ each: true })
   @Type(() => JsonContentDto)
   content: JsonContentDto[];
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  metaDescription?: string;
 
   @ApiProperty({
     example: ['category'],

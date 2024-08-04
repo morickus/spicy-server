@@ -39,7 +39,7 @@ export class ArticlesService {
   }
 
   async createArticle(session: GetSessionInfoDto, body: CreateArticleDto) {
-    const { title, content, categories } = body;
+    const { title, content, categories, metaDescription } = body;
     const excerpt = generateExcerpt(content);
     const slug = await this.slugService.generateUniqueSlug(
       body.title,
@@ -53,6 +53,7 @@ export class ArticlesService {
           slug,
           title,
           excerpt,
+          metaDescription,
           content: JSON.parse(JSON.stringify(content)),
           author: {
             connect: {
@@ -88,7 +89,7 @@ export class ArticlesService {
     id: number,
     body: UpdateArticleDto,
   ) {
-    const { title, content, categories } = body;
+    const { title, content, categories, metaDescription } = body;
 
     const article = await this.prisma.article.findUnique({
       where: { id },
@@ -115,6 +116,7 @@ export class ArticlesService {
       data: {
         ...(title && { title }),
         ...(excerpt && { excerpt }),
+        ...(typeof metaDescription === 'string' && { metaDescription }),
         ...(content && { content: JSON.parse(JSON.stringify(content)) }),
         ...(categoryConnections && {
           categories: { set: categoryConnections },
@@ -198,6 +200,7 @@ export class ArticlesService {
     return article;
   }
 
+  // TODO: fix params pagination
   private async getPaginatedArticles(where: any, paginationDto: PaginationDto) {
     const { page = 1, limit = 10 } = paginationDto;
     const skip = (page - 1) * limit;
@@ -216,6 +219,7 @@ export class ArticlesService {
         slug: true,
         title: true,
         excerpt: true,
+        metaDescription: true,
         authorId: true,
         author: {
           select: {
@@ -233,9 +237,11 @@ export class ArticlesService {
       },
     });
 
+    // TODO: fix totalArticle and data make one request
     const totalArticle = await this.prisma.article.count({ where });
     const totalPages = Math.ceil(totalArticle / limit);
 
+    // TODO: fix response pagination
     return {
       data,
       totalPages,

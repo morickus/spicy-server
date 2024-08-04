@@ -23,6 +23,9 @@ export class ArticleAllResponseDto {
   @ApiProperty()
   excerpt: string;
 
+  @ApiProperty({ required: false })
+  metaDescription?: string;
+
   @ApiProperty()
   authorId: number;
 
