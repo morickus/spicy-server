@@ -8,16 +8,15 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  email     String    @unique
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  email     String     @unique
   name      String?
-  role      Role      @default(USER)
-  hash      String
-  salt      String
+  role      Role       @default(USER)
   articles  Article[]
   profile   Profile?
+  authCodes AuthCode[]
 }
 
 model Profile {
@@ -25,6 +24,17 @@ model Profile {
   bio    String?
   userId Int     @unique
   user   User    @relation(fields: [userId], references: [id])
+}
+
+model AuthCode {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime
+  activatedAt DateTime?
+  code        String
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model Article {

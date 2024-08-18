@@ -8,7 +8,7 @@ export class GetSessionInfoDto {
   @ApiProperty()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: Role })
   role: Role;
 
   @ApiProperty()

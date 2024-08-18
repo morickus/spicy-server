@@ -14,7 +14,7 @@ import {
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 import { GetSessionInfoDto } from '../auth/dto/get-session-info.dto';
-import { SessionInfo } from '../auth/session-info.decorator';
+import { SessionInfo } from '../auth/utils/session-info.decorator';
 import { ApiOkResponsePaginate } from '../common/decorator/api-ok-response-paginate.decorator';
 import { ApiPaginationQuery } from '../common/decorator/api-pagination-query.decorator';
 import { PaginationDto } from '../common/dto/pagination.dto';

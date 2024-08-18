@@ -1,0 +1,48 @@
+<mjml>
+  <mj-head>
+    <mj-style inline="inline">
+
+    </mj-style>
+  </mj-head>
+  <mj-body width="612px">
+    <mj-section text-align="left" background-color="#1f2227" padding-top="0px" padding-bottom="0px">
+      <mj-column padding-top="0px" padding-right="0px" padding-left="0px" padding-bottom="0px" border-bottom="1px solid #2f3133">
+        <mj-text padding-top="15px" padding-bottom="15px" padding-right="0px" padding-left="30px" font-size="20px" line-height="24px" color="#ffffff" font-weight="500" font-family="Inter, sans-serif">spicy.pub
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section text-align="left" background-color="#1f2227" padding-top="30px" padding-left="30px" padding-right="30px" padding-bottom="30px">
+      <mj-column padding-top="0px" padding-right="0px" padding-left="0px" padding-bottom="0px">
+        <mj-text padding-top="0px" padding-bottom="30px" padding-right="0px" padding-left="0px" font-size="36px" line-height="47px" color="#ffffff" font-weight="500" font-family="Times New Roman, Times, sans-serif">Your spicy.pub login code
+        </mj-text>
+        <mj-text padding-top="0px" padding-bottom="15px" padding-right="0px" padding-left="0px" font-size="16px" line-height="28px" color="#ffffff" font-weight="400" font-family="Inter, sans-serif">Hi,
+        </mj-text>
+        <mj-text padding-top="0px" padding-bottom="15px" padding-right="0px" padding-left="0px" font-size="16px" line-height="28px" color="#ffffff" font-weight="400" font-family="Inter, sans-serif">Welcome back to 
+          <span style="color:#6FFF2B;">spicy.pub</span>! To log in to your account, please use the following login code:
+        </mj-text>
+        <mj-text padding-top="0px" padding-bottom="15px" padding-right="0px" padding-left="0px" font-size="16px" line-height="28px" color="#ffffff" font-weight="700" font-family="Inter, sans-serif">
+          <span style="color:#6FFF2B;">{{code}}</span>
+        </mj-text>
+        <mj-text padding-top="0px" padding-bottom="15px" padding-right="0px" padding-left="0px" font-size="16px" line-height="28px" color="#ffffff" font-weight="400" font-family="Inter, sans-serif">If you did not request this code or attempt to log in to 
+          <span style="color:#6FFF2B;">spicy.pub</span>, please ignore this email.
+        </mj-text>
+        <mj-text padding-top="0px" padding-bottom="0px" padding-right="0px" padding-left="0px" font-size="16px" line-height="28px" color="#ffffff" font-weight="400" font-family="Inter, sans-serif">Thank you,
+          <br />
+          The spicy.pub team
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section text-align="left" background-color="#1f2227" padding-top="0px" padding-left="30px" padding-right="30px" padding-bottom="0px">
+      <mj-column padding-top="15px" padding-right="10px" padding-left="1px" padding-bottom="15px" border-top="1px solid #a9abac">
+        <mj-text padding-top="0px" padding-bottom="0px" padding-right="0px" padding-left="0px" font-size="12px" line-height="21px" color="#a9abac" font-weight="400" font-family="Inter, sans-serif">&copy; 2024 spicy.pub
+        </mj-text>
+        <mj-text padding-top="0px" padding-bottom="0px" padding-right="0px" padding-left="0px" font-size="12px" line-height="21px" color="#a9abac" font-weight="400" font-family="Inter, sans-serif">For authors: 
+          <span style="color:#6FFF2B;">authors@spicy.pub</span>
+        </mj-text>
+        <mj-text padding-top="0px" padding-bottom="0px" padding-right="0px" padding-left="0px" font-size="12px" line-height="21px" color="#a9abac" font-weight="400" font-family="Inter, sans-serif">For ads: 
+          <span style="color:#6FFF2B;">ads@spicy.pub</span>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

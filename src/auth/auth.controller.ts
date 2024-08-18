@@ -8,15 +8,21 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { CookieService } from './cookie.service';
 import { GetSessionInfoDto } from './dto/get-session-info.dto';
-import { SignInBodyDto } from './dto/sign-in.dto';
-import { SignUpBodyDto } from './dto/sign-up.dto';
-import { SessionInfo } from './session-info.decorator';
+import { SendCodeDto } from './dto/send-code.dto';
+import { SignUpDto } from './dto/sign-up.dto';
+import { VerifyCodeDto } from './dto/verify-code.dto';
+import { CookieService } from './utils/cookie.service';
+import { SessionInfo } from './utils/session-info.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -28,29 +34,43 @@ export class AuthController {
 
   @Post('sign-up')
   @ApiCreatedResponse()
-  async signUp(
-    @Body() body: SignUpBodyDto,
+  async signUp(@Body() body: SignUpDto) {
+    return await this.authService.signUp(body.email);
+  }
+
+  @Post('send-code')
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async sendCode(@Body() body: SendCodeDto) {
+    await this.authService.sendCode(body.email);
+  }
+
+  @Post('verify-code')
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async verifyCode(
+    @Body() body: VerifyCodeDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken } = await this.authService.signUp(
+    const { accessToken } = await this.authService.verifyCode(
       body.email,
-      body.password,
+      body.code,
     );
 
     this.cookieService.setToken(res, accessToken);
   }
 
-  @Post('sign-in')
+  @Post('google')
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  async signIn(
-    @Body() body: SignInBodyDto,
+  @ApiBody({
+    schema: { type: 'object', properties: { code: { type: 'string' } } },
+  })
+  async googleAuth(
+    @Body('code') code: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken } = await this.authService.signIn(
-      body.email,
-      body.password,
-    );
+    const { accessToken } = await this.authService.verifyGoogleToken(code);
 
     this.cookieService.setToken(res, accessToken);
   }
