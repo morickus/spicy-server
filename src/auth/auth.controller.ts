@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -14,7 +15,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { GetSessionInfoDto } from './dto/get-session-info.dto';
@@ -22,7 +23,6 @@ import { SendCodeDto } from './dto/send-code.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { VerifyCodeDto } from './dto/verify-code.dto';
 import { CookieService } from './utils/cookie.service';
-import { SessionInfo } from './utils/session-info.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -30,6 +30,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private cookieService: CookieService,
+    private readonly authGuard: AuthGuard,
   ) {}
 
   @Post('sign-up')
@@ -87,8 +88,7 @@ export class AuthController {
   @ApiOkResponse({
     type: GetSessionInfoDto,
   })
-  @UseGuards(AuthGuard)
-  getSessionInfo(@SessionInfo() session: GetSessionInfoDto) {
-    return session;
+  getSessionInfo(@Req() req: Request): GetSessionInfoDto | null {
+    return this.authGuard.getSessionInfo(req);
   }
 }

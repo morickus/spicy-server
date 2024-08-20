@@ -35,6 +35,8 @@ export class MailService {
   ) {
     const mjmlTemplate = await this.getEmailTemplate(templateName);
 
+    context.year = new Date().getFullYear();
+
     const mjmlWithVariables = this.replaceVariables(mjmlTemplate, context);
 
     const { html } = mjml2html(mjmlWithVariables);
