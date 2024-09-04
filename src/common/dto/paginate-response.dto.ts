@@ -4,13 +4,13 @@ export class PaginateResponseDto<T> {
   data: T[];
 
   @ApiProperty()
-  limitPage: number;
+  page: number;
 
   @ApiProperty()
-  totalPages: number;
+  limit: number;
 
   @ApiProperty()
-  currentPage: number;
+  total: number;
 
   @ApiProperty()
   hasPrev: boolean;

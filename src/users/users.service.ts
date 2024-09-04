@@ -14,12 +14,10 @@ export class UsersService {
     return this.prisma.user.create({ data: { email } });
   }
 
-  async getAllUsers(paginationDto: PaginationDto) {
-    const { page = 1, limit = 10 } = paginationDto;
-    const skip = (page - 1) * limit;
+  async getAllUsers(pagination: PaginationDto) {
+    const { page = 1, limit = 10, skip } = pagination;
 
-    const [totalArticle, data] = await Promise.all([
-      this.prisma.user.count(),
+    const [data, total] = await this.prisma.$transaction([
       this.prisma.user.findMany({
         skip,
         take: limit,
@@ -28,17 +26,16 @@ export class UsersService {
           email: true,
         },
       }),
+      this.prisma.user.count(),
     ]);
-
-    const totalPages = Math.ceil(totalArticle / limit);
 
     return {
       data,
-      totalPages,
-      limitPage: limit,
-      currentPage: page,
+      page,
+      limit,
+      total,
       hasPrev: page > 1,
-      hasNext: page < totalPages,
+      hasNext: page < total / limit,
     };
   }
 }

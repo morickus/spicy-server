@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { GetSessionInfoDto } from '../auth/dto/get-session-info.dto';
 import { Role } from '../auth/enums/role.enum';
 import { PaginationDto } from '../common/dto/pagination.dto';
@@ -11,6 +12,7 @@ import { generateExcerpt } from '../common/excerpt';
 import { PrismaService } from '../prisma/prisma.service';
 import { SlugService } from '../slug/slug.service';
 import { CreateArticleDto } from './dto/create-article.dto';
+import { FilterDto } from './dto/filter.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 
 @Injectable()
@@ -200,77 +202,82 @@ export class ArticlesService {
     return article;
   }
 
-  // TODO: fix params pagination
-  private async getPaginatedArticles(where: any, paginationDto: PaginationDto) {
-    const { page = 1, limit = 10 } = paginationDto;
-    const skip = (page - 1) * limit;
+  private articleSelect: Prisma.ArticleSelect = {
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+    slug: true,
+    title: true,
+    excerpt: true,
+    metaDescription: true,
+    authorId: true,
+    author: {
+      select: {
+        id: true,
+        // email: true,
+      },
+    },
+    categories: {
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+      },
+    },
+  };
 
-    const data = await this.prisma.article.findMany({
+  async getAllArticles(pagination: PaginationDto, filter: FilterDto) {
+    const { page = 1, limit = 10, skip } = pagination;
+    const { tags } = filter;
+    let where: any = {};
+
+    if (tags && tags.length > 0) {
+      where.AND = tags.map((tag) => ({
+        categories: {
+          some: {
+            slug: tag,
+          },
+        },
+      }));
+    }
+
+    const query: Prisma.ArticleFindManyArgs = {
       where,
       skip,
       take: limit,
       orderBy: {
         createdAt: 'desc',
       },
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        slug: true,
-        title: true,
-        excerpt: true,
-        metaDescription: true,
-        authorId: true,
-        author: {
-          select: {
-            id: true,
-            email: true,
-          },
-        },
-        categories: {
-          select: {
-            id: true,
-            slug: true,
-            name: true,
-          },
-        },
-      },
-    });
+      select: this.articleSelect,
+    };
 
-    // TODO: fix totalArticle and data make one request
-    const totalArticle = await this.prisma.article.count({ where });
-    const totalPages = Math.ceil(totalArticle / limit);
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.article.findMany(query),
+      this.prisma.article.count({ where: query.where }),
+    ]);
 
-    // TODO: fix response pagination
     return {
       data,
-      totalPages,
-      limitPage: limit,
-      currentPage: page,
+      page,
+      limit,
+      total,
       hasPrev: page > 1,
-      hasNext: page < totalPages,
+      hasNext: page < total / limit,
     };
   }
 
-  async getAllArticles(paginationDto: PaginationDto) {
-    return this.getPaginatedArticles({}, paginationDto);
-  }
+  async getRandomArticles(count: number) {
+    const totalArticles = await this.prisma.article.count();
 
-  async getArticlesByCategory(slug: string, paginationDto: PaginationDto) {
-    const category = await this.prisma.category.findUnique({
-      where: { slug },
-      select: {
-        id: true,
+    const adjustedCount = Math.min(count, totalArticles);
+
+    return this.prisma.article.findMany({
+      take: adjustedCount,
+      skip: Math.floor(Math.random() * totalArticles),
+      orderBy: {
+        id: 'asc',
       },
+      select: this.articleSelect,
     });
-
-    if (!category) {
-      throw new NotFoundException('Category not found');
-    }
-
-    return this.getPaginatedArticles(
-      { categories: { some: { id: category.id } } },
-      paginationDto,
-    );
   }
 }
